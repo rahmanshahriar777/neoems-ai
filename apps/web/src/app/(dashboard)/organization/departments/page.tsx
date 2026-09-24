@@ -60,22 +60,28 @@ export default function DepartmentsPage() {
       if (Array.isArray(res) && res.length > 0) {
         setDepartments(res);
       } else {
-        // Fallback default organizational units
-        setDepartments([
-          { id: '1', name: 'Engineering', code: 'ENG', description: 'Core software engineering, architecture, platform systems, and infrastructure.', _count: { employees: 3, designations: 2 } },
-          { id: '2', name: 'Human Resources', code: 'HR', description: 'Talent acquisition, organizational development, employee lifecycle, and culture.', _count: { employees: 1, designations: 1 } },
-          { id: '3', name: 'Finance & Accounting', code: 'FIN', description: 'Financial forecasting, compensation modeling, audit compliance, and payroll accounting.', _count: { employees: 0, designations: 1 } },
-          { id: '4', name: 'Product & Design', code: 'PRD', description: 'User experience research, interaction design, product roadmap, and feature discovery.', _count: { employees: 0, designations: 1 } },
-          { id: '5', name: 'Legal & Governance', code: 'LGL', description: 'Corporate governance, contracts, regulatory oversight, and policy execution.', _count: { employees: 0, designations: 1 } },
-        ]);
+        const defaultDepartments = [
+          { id: '1', name: 'Engineering', code: 'ENG', description: 'Core software engineering, architecture, platform systems, and cloud infrastructure.', _count: { employees: 8, designations: 6 } },
+          { id: '2', name: 'Human Resources', code: 'HR', description: 'Talent acquisition, organizational development, employee lifecycle, and culture.', _count: { employees: 3, designations: 3 } },
+          { id: '3', name: 'Finance & Accounting', code: 'FIN', description: 'Financial forecasting, compensation modeling, audit compliance, and payroll accounting.', _count: { employees: 2, designations: 3 } },
+          { id: '4', name: 'Product & Design', code: 'PRD', description: 'User experience research, interaction design, product roadmap, and feature discovery.', _count: { employees: 2, designations: 2 } },
+          { id: '5', name: 'Marketing & Growth', code: 'MKT', description: 'Brand strategy, developer relations, public communications, and growth marketing.', _count: { employees: 1, designations: 2 } },
+          { id: '6', name: 'Legal & Compliance', code: 'LGL', description: 'Corporate governance, contracts, regulatory compliance, and risk management.', _count: { employees: 1, designations: 1 } },
+          { id: '7', name: 'Customer Success', code: 'CSS', description: 'Enterprise client onboarding, account management, and strategic technical support.', _count: { employees: 1, designations: 1 } },
+          { id: '8', name: 'Quality Assurance & DevOps', code: 'QAT', description: 'Automated testing frameworks, performance validation, and CI/CD pipelines.', _count: { employees: 2, designations: 1 } },
+        ];
+        setDepartments(defaultDepartments);
       }
     } catch {
       setDepartments([
-        { id: '1', name: 'Engineering', code: 'ENG', description: 'Core software engineering, architecture, platform systems, and infrastructure.', _count: { employees: 3, designations: 2 } },
-        { id: '2', name: 'Human Resources', code: 'HR', description: 'Talent acquisition, organizational development, employee lifecycle, and culture.', _count: { employees: 1, designations: 1 } },
-        { id: '3', name: 'Finance & Accounting', code: 'FIN', description: 'Financial forecasting, compensation modeling, audit compliance, and payroll accounting.', _count: { employees: 0, designations: 1 } },
-        { id: '4', name: 'Product & Design', code: 'PRD', description: 'User experience research, interaction design, product roadmap, and feature discovery.', _count: { employees: 0, designations: 1 } },
-        { id: '5', name: 'Legal & Governance', code: 'LGL', description: 'Corporate governance, contracts, regulatory oversight, and policy execution.', _count: { employees: 0, designations: 1 } },
+        { id: '1', name: 'Engineering', code: 'ENG', description: 'Core software engineering, architecture, platform systems, and cloud infrastructure.', _count: { employees: 8, designations: 6 } },
+        { id: '2', name: 'Human Resources', code: 'HR', description: 'Talent acquisition, organizational development, employee lifecycle, and culture.', _count: { employees: 3, designations: 3 } },
+        { id: '3', name: 'Finance & Accounting', code: 'FIN', description: 'Financial forecasting, compensation modeling, audit compliance, and payroll accounting.', _count: { employees: 2, designations: 3 } },
+        { id: '4', name: 'Product & Design', code: 'PRD', description: 'User experience research, interaction design, product roadmap, and feature discovery.', _count: { employees: 2, designations: 2 } },
+        { id: '5', name: 'Marketing & Growth', code: 'MKT', description: 'Brand strategy, developer relations, public communications, and growth marketing.', _count: { employees: 1, designations: 2 } },
+        { id: '6', name: 'Legal & Compliance', code: 'LGL', description: 'Corporate governance, contracts, regulatory compliance, and risk management.', _count: { employees: 1, designations: 1 } },
+        { id: '7', name: 'Customer Success', code: 'CSS', description: 'Enterprise client onboarding, account management, and strategic technical support.', _count: { employees: 1, designations: 1 } },
+        { id: '8', name: 'Quality Assurance & DevOps', code: 'QAT', description: 'Automated testing frameworks, performance validation, and CI/CD pipelines.', _count: { employees: 2, designations: 1 } },
       ]);
     } finally {
       setLoading(false);

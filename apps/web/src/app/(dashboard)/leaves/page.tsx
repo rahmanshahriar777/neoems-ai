@@ -83,41 +83,106 @@ export default function LeavesPage() {
         api.get('/leave-types').catch(() => null),
       ]);
 
+      const fallbackBalances: LeaveBalance[] = [
+        { leaveType: { name: 'Annual Paid Leave' }, allocatedDays: 20, usedDays: 3, remainingDays: 17 },
+        { leaveType: { name: 'Sick & Medical Leave' }, allocatedDays: 12, usedDays: 1, remainingDays: 11 },
+        { leaveType: { name: 'Casual & Personal' }, allocatedDays: 5, usedDays: 1, remainingDays: 4 },
+        { leaveType: { name: 'Maternity / Paternity' }, allocatedDays: 90, usedDays: 0, remainingDays: 90 },
+      ];
+
+      const fallbackRequests: LeaveRequest[] = [
+        {
+          id: '1',
+          employee: { firstName: 'Sadia', lastName: 'Rahman', employeeNumber: 'EMP-2026-0004' },
+          leaveType: { name: 'Annual Paid Leave' },
+          startDate: '2026-09-20',
+          endDate: '2026-09-22',
+          totalDays: 3,
+          reason: 'Attending Google Cloud Summit and microservices workshop',
+          status: 'APPROVED',
+        },
+        {
+          id: '2',
+          employee: { firstName: 'Alex', lastName: 'Rivera', employeeNumber: 'EMP-2026-0005' },
+          leaveType: { name: 'Casual & Personal' },
+          startDate: '2026-09-28',
+          endDate: '2026-09-29',
+          totalDays: 2,
+          reason: 'Family relocation and settlement matters',
+          status: 'PENDING',
+        },
+        {
+          id: '3',
+          employee: { firstName: 'Elena', lastName: 'Rostova', employeeNumber: 'EMP-2026-0006' },
+          leaveType: { name: 'Sick & Medical Leave' },
+          startDate: '2026-09-14',
+          endDate: '2026-09-15',
+          totalDays: 2,
+          reason: 'Seasonal viral infection recovery and doctor consultation',
+          status: 'APPROVED',
+        },
+        {
+          id: '4',
+          employee: { firstName: 'Tariq', lastName: 'Mansoor', employeeNumber: 'EMP-2026-0007' },
+          leaveType: { name: 'Annual Paid Leave' },
+          startDate: '2026-10-05',
+          endDate: '2026-10-09',
+          totalDays: 5,
+          reason: 'International vacation with family',
+          status: 'PENDING',
+        },
+        {
+          id: '5',
+          employee: { firstName: 'Shahriar', lastName: 'Rahman', employeeNumber: 'EMP-2026-0003' },
+          leaveType: { name: 'Casual & Personal' },
+          startDate: '2026-08-10',
+          endDate: '2026-08-11',
+          totalDays: 1,
+          reason: 'Personal household administrative duties',
+          status: 'APPROVED',
+        },
+        {
+          id: '6',
+          employee: { firstName: 'Julian', lastName: 'Rossi', employeeNumber: 'EMP-2026-0014' },
+          leaveType: { name: 'Annual Paid Leave' },
+          startDate: '2026-09-01',
+          endDate: '2026-09-03',
+          totalDays: 3,
+          reason: 'Design sprint burnout recovery',
+          status: 'APPROVED',
+        },
+        {
+          id: '7',
+          employee: { firstName: 'Liam', lastName: "O'Connor", employeeNumber: 'EMP-2026-0008' },
+          leaveType: { name: 'Casual & Personal' },
+          startDate: '2026-09-25',
+          endDate: '2026-09-25',
+          totalDays: 1,
+          reason: 'University convocation ceremony',
+          status: 'APPROVED',
+        },
+        {
+          id: '8',
+          employee: { firstName: 'Michael', lastName: 'Chang', employeeNumber: 'EMP-2026-0017' },
+          leaveType: { name: 'Annual Paid Leave' },
+          startDate: '2026-09-18',
+          endDate: '2026-09-19',
+          totalDays: 2,
+          reason: 'Request during introductory probation period',
+          status: 'REJECTED',
+        },
+      ];
+
       if (balRes && Array.isArray(balRes) && balRes.length > 0) {
         setBalances(balRes);
       } else {
-        setBalances([
-          { leaveType: { name: 'Annual Paid Leave' }, allocatedDays: 20, usedDays: 3, remainingDays: 17 },
-          { leaveType: { name: 'Sick & Medical Leave' }, allocatedDays: 10, usedDays: 0, remainingDays: 10 },
-          { leaveType: { name: 'Casual & Personal' }, allocatedDays: 5, usedDays: 0, remainingDays: 5 },
-        ]);
+        setBalances(fallbackBalances);
       }
 
       if (reqRes && Array.isArray(reqRes) && reqRes.length > 0) {
         setLeaveRequests(reqRes);
       } else {
-        setLeaveRequests([
-          {
-            id: '1',
-            employee: { firstName: 'Sadia', lastName: 'Rahman', employeeNumber: 'EMP-2026-0004' },
-            leaveType: { name: 'Annual Paid Leave' },
-            startDate: '2026-09-20',
-            endDate: '2026-09-22',
-            totalDays: 3,
-            reason: 'Attending architecture summit and family event',
-            status: 'PENDING',
-          },
-          {
-            id: '2',
-            employee: { firstName: 'Shahriar', lastName: 'Rahman', employeeNumber: 'EMP-2026-0003' },
-            leaveType: { name: 'Casual & Personal' },
-            startDate: '2026-08-10',
-            endDate: '2026-08-11',
-            totalDays: 1,
-            reason: 'Personal household relocation',
-            status: 'APPROVED',
-          },
-        ]);
+        setLeaveRequests(fallbackRequests);
       }
 
       if (typesRes && Array.isArray(typesRes) && typesRes.length > 0) {
@@ -126,16 +191,17 @@ export default function LeavesPage() {
       } else {
         setLeaveTypes([
           { id: 'type-1', name: 'Annual Paid Leave', defaultDaysPerYear: 20 },
-          { id: 'type-2', name: 'Sick & Medical Leave', defaultDaysPerYear: 10 },
+          { id: 'type-2', name: 'Sick & Medical Leave', defaultDaysPerYear: 12 },
           { id: 'type-3', name: 'Casual & Personal', defaultDaysPerYear: 5 },
+          { id: 'type-4', name: 'Maternity / Paternity', defaultDaysPerYear: 90 },
         ]);
         setLeaveTypeId('type-1');
       }
     } catch {
       setBalances([
         { leaveType: { name: 'Annual Paid Leave' }, allocatedDays: 20, usedDays: 3, remainingDays: 17 },
-        { leaveType: { name: 'Sick & Medical Leave' }, allocatedDays: 10, usedDays: 0, remainingDays: 10 },
-        { leaveType: { name: 'Casual & Personal' }, allocatedDays: 5, usedDays: 0, remainingDays: 5 },
+        { leaveType: { name: 'Sick & Medical Leave' }, allocatedDays: 12, usedDays: 1, remainingDays: 11 },
+        { leaveType: { name: 'Casual & Personal' }, allocatedDays: 5, usedDays: 1, remainingDays: 4 },
       ]);
       setLeaveRequests([
         {
@@ -145,7 +211,17 @@ export default function LeavesPage() {
           startDate: '2026-09-20',
           endDate: '2026-09-22',
           totalDays: 3,
-          reason: 'Attending architecture summit and family event',
+          reason: 'Attending Google Cloud Summit and microservices workshop',
+          status: 'APPROVED',
+        },
+        {
+          id: '2',
+          employee: { firstName: 'Alex', lastName: 'Rivera', employeeNumber: 'EMP-2026-0005' },
+          leaveType: { name: 'Casual & Personal' },
+          startDate: '2026-09-28',
+          endDate: '2026-09-29',
+          totalDays: 2,
+          reason: 'Family relocation and settlement matters',
           status: 'PENDING',
         },
       ]);

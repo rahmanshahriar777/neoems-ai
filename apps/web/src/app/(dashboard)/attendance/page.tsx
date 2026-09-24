@@ -58,6 +58,36 @@ export default function AttendancePage() {
     return () => clearInterval(timer);
   }, []);
 
+const DEMO_MY_ATTENDANCE: AttendanceRecord[] = [
+  { id: 'att-1', date: '2026-09-24', clockInTime: '08:58:14 AM', clockOutTime: '06:05:00 PM', totalHoursWorked: 9.11, status: 'PRESENT', notes: 'Core development and deploy supervision' },
+  { id: 'att-2', date: '2026-09-23', clockInTime: '09:02:10 AM', clockOutTime: '06:12:30 PM', totalHoursWorked: 9.17, status: 'PRESENT', notes: 'Sprint backlog grooming and review' },
+  { id: 'att-3', date: '2026-09-22', clockInTime: '09:24:00 AM', clockOutTime: '06:10:00 PM', totalHoursWorked: 8.76, status: 'LATE', notes: 'Morning road transit delay' },
+  { id: 'att-4', date: '2026-09-21', clockInTime: '08:55:00 AM', clockOutTime: '06:00:00 PM', totalHoursWorked: 9.08, status: 'PRESENT', notes: 'Platform security architecture sync' },
+  { id: 'att-5', date: '2026-09-18', clockInTime: '09:01:22 AM', clockOutTime: '06:04:15 PM', totalHoursWorked: 9.05, status: 'PRESENT', notes: 'Cloud Run microservices testing' },
+  { id: 'att-6', date: '2026-09-17', clockInTime: '09:14:40 AM', clockOutTime: '06:08:00 PM', totalHoursWorked: 8.89, status: 'PRESENT', notes: 'Technical documentation sprint' },
+  { id: 'att-7', date: '2026-09-16', clockInTime: '09:00:15 AM', clockOutTime: '01:30:00 PM', totalHoursWorked: 4.50, status: 'HALF_DAY', notes: 'Approved medical half-day checkup' },
+  { id: 'att-8', date: '2026-09-15', clockInTime: '08:52:30 AM', clockOutTime: '06:01:00 PM', totalHoursWorked: 9.14, status: 'PRESENT', notes: 'AI Assistant speech audio streaming demo' },
+  { id: 'att-9', date: '2026-09-14', clockInTime: '09:20:10 AM', clockOutTime: '06:15:00 PM', totalHoursWorked: 8.91, status: 'LATE', notes: 'Severe weather transit disruption' },
+  { id: 'att-10', date: '2026-09-11', clockInTime: '08:59:00 AM', clockOutTime: '06:00:00 PM', totalHoursWorked: 9.02, status: 'PRESENT', notes: 'Bi-weekly retrospective and planning' },
+];
+
+const DEMO_TEAM_ATTENDANCE: AttendanceRecord[] = [
+  { id: 't-1', date: '2026-09-24', employee: { firstName: 'Sadia', lastName: 'Rahman', employeeNumber: 'EMP-2026-0004' }, clockInTime: '08:55:12 AM', clockOutTime: '06:02:00 PM', totalHoursWorked: 9.12, status: 'PRESENT', notes: 'Platform sprint delivery & SRS completion' },
+  { id: 't-2', date: '2026-09-24', employee: { firstName: 'Shahriar', lastName: 'Rahman', employeeNumber: 'EMP-2026-0003' }, clockInTime: '09:04:40 AM', clockOutTime: '06:15:00 PM', totalHoursWorked: 9.17, status: 'PRESENT', notes: 'Executive sprint retro and team standup' },
+  { id: 't-3', date: '2026-09-24', employee: { firstName: 'Alex', lastName: 'Rivera', employeeNumber: 'EMP-2026-0005' }, clockInTime: '08:50:11 AM', clockOutTime: '06:10:00 PM', totalHoursWorked: 9.33, status: 'PRESENT', notes: 'Kubernetes ingress optimization' },
+  { id: 't-4', date: '2026-09-24', employee: { firstName: 'Elena', lastName: 'Rostova', employeeNumber: 'EMP-2026-0006' }, clockInTime: '09:01:00 AM', clockOutTime: '06:00:00 PM', totalHoursWorked: 8.98, status: 'PRESENT', notes: 'Backend prisma relational migration' },
+  { id: 't-5', date: '2026-09-24', employee: { firstName: 'Tariq', lastName: 'Mansoor', employeeNumber: 'EMP-2026-0007' }, clockInTime: '09:19:30 AM', clockOutTime: '06:15:00 PM', totalHoursWorked: 8.92, status: 'LATE', notes: 'Late train arrival at central station' },
+  { id: 't-6', date: '2026-09-24', employee: { firstName: 'Liam', lastName: "O'Connor", employeeNumber: 'EMP-2026-0008' }, clockInTime: '08:58:20 AM', clockOutTime: '06:05:00 PM', totalHoursWorked: 9.11, status: 'PRESENT', notes: 'Remote Ireland hub connection' },
+  { id: 't-7', date: '2026-09-24', employee: { firstName: 'HR', lastName: 'Manager', employeeNumber: 'EMP-2026-0002' }, clockInTime: '09:22:10 AM', clockOutTime: '06:10:00 PM', totalHoursWorked: 8.80, status: 'LATE', notes: 'Candidate screening morning interviews' },
+  { id: 't-8', date: '2026-09-24', employee: { firstName: 'Priya', lastName: 'Sharma', employeeNumber: 'EMP-2026-0009' }, clockInTime: '08:45:00 AM', clockOutTime: '05:55:00 PM', totalHoursWorked: 9.16, status: 'PRESENT', notes: 'Onboarding new cohort developers' },
+  { id: 't-9', date: '2026-09-24', employee: { firstName: 'Sophia', lastName: 'Chen', employeeNumber: 'EMP-2026-0011' }, clockInTime: '09:00:05 AM', clockOutTime: '06:10:00 PM', totalHoursWorked: 9.16, status: 'PRESENT', notes: 'Payroll monthly signoff review' },
+  { id: 't-10', date: '2026-09-24', employee: { firstName: 'David', lastName: 'Kim', employeeNumber: 'EMP-2026-0012' }, clockInTime: '08:56:45 AM', clockOutTime: '06:00:00 PM', totalHoursWorked: 9.05, status: 'PRESENT', notes: 'Tax withholding statutory calculations' },
+  { id: 't-11', date: '2026-09-24', employee: { firstName: 'Chloe', lastName: 'Martin', employeeNumber: 'EMP-2026-0013' }, clockInTime: '09:05:15 AM', clockOutTime: '06:12:00 PM', totalHoursWorked: 9.11, status: 'PRESENT', notes: 'User research synthesis workshop' },
+  { id: 't-12', date: '2026-09-24', employee: { firstName: 'Julian', lastName: 'Rossi', employeeNumber: 'EMP-2026-0014' }, clockInTime: '09:16:30 AM', clockOutTime: '06:20:00 PM', totalHoursWorked: 9.06, status: 'LATE', notes: 'Milan studio connection delay' },
+  { id: 't-13', date: '2026-09-24', employee: { firstName: 'Victoria', lastName: 'Sterling', employeeNumber: 'EMP-2026-0016' }, clockInTime: '08:50:00 AM', clockOutTime: '06:00:00 PM', totalHoursWorked: 9.17, status: 'PRESENT', notes: 'SOC2 quarterly verification' },
+  { id: 't-14', date: '2026-09-24', employee: { firstName: 'Rachel', lastName: 'Green', employeeNumber: 'EMP-2026-0018' }, clockInTime: '08:52:10 AM', clockOutTime: '06:02:00 PM', totalHoursWorked: 9.16, status: 'PRESENT', notes: 'End-to-end regression test suite execution' },
+];
+
   const fetchAttendance = async () => {
     setLoading(true);
     try {
@@ -66,41 +96,13 @@ export default function AttendancePage() {
         if (res?.items && Array.isArray(res.items) && res.items.length > 0) {
           setAttendanceList(res.items);
         } else {
-          setAttendanceList([
-            {
-              id: '1',
-              date: new Date().toISOString().split('T')[0],
-              clockInTime: '09:02:14 AM',
-              clockOutTime: '06:05:00 PM',
-              totalHoursWorked: 9.05,
-              status: 'PRESENT',
-              notes: 'Standard core shift logged',
-            },
-            {
-              id: '2',
-              date: '2026-09-12',
-              clockInTime: '09:18:00 AM',
-              clockOutTime: '06:10:00 PM',
-              totalHoursWorked: 8.87,
-              status: 'LATE',
-              notes: 'Transit delay on metro rail',
-            },
-            {
-              id: '3',
-              date: '2026-09-11',
-              clockInTime: '08:58:30 AM',
-              clockOutTime: '06:00:00 PM',
-              totalHoursWorked: 9.02,
-              status: 'PRESENT',
-              notes: 'Architecture review meeting',
-            },
-          ]);
+          setAttendanceList(DEMO_MY_ATTENDANCE);
         }
         if (res?.meta?.today) {
           setTodayRecord(res.meta.today);
         } else {
           setTodayRecord({
-            clockInTime: '09:02:14 AM',
+            clockInTime: '08:58:14 AM',
             status: 'PRESENT',
           });
         }
@@ -109,63 +111,13 @@ export default function AttendancePage() {
         if (res?.items && Array.isArray(res.items) && res.items.length > 0) {
           setAttendanceList(res.items);
         } else {
-          setAttendanceList([
-            {
-              id: '1',
-              date: new Date().toISOString().split('T')[0],
-              employee: { firstName: 'Sadia', lastName: 'Rahman', employeeNumber: 'EMP-2026-0004' },
-              clockInTime: '08:55:12 AM',
-              clockOutTime: '06:02:00 PM',
-              totalHoursWorked: 9.12,
-              status: 'PRESENT',
-              notes: 'Platform sprint delivery',
-            },
-            {
-              id: '2',
-              date: new Date().toISOString().split('T')[0],
-              employee: { firstName: 'Shahriar', lastName: 'Rahman', employeeNumber: 'EMP-2026-0003' },
-              clockInTime: '09:04:40 AM',
-              clockOutTime: '06:15:00 PM',
-              totalHoursWorked: 9.17,
-              status: 'PRESENT',
-              notes: 'Executive sprint retro',
-            },
-            {
-              id: '3',
-              date: new Date().toISOString().split('T')[0],
-              employee: { firstName: 'HR', lastName: 'Manager', employeeNumber: 'EMP-2026-0002' },
-              clockInTime: '09:22:10 AM',
-              clockOutTime: '06:10:00 PM',
-              totalHoursWorked: 8.8,
-              status: 'LATE',
-              notes: 'Interviews screening session',
-            },
-          ]);
+          setAttendanceList(DEMO_TEAM_ATTENDANCE);
         }
       }
     } catch {
-      setAttendanceList([
-        {
-          id: '1',
-          date: new Date().toISOString().split('T')[0],
-          clockInTime: '09:02:14 AM',
-          clockOutTime: '06:05:00 PM',
-          totalHoursWorked: 9.05,
-          status: 'PRESENT',
-          notes: 'Standard core shift logged',
-        },
-        {
-          id: '2',
-          date: '2026-09-12',
-          clockInTime: '09:18:00 AM',
-          clockOutTime: '06:10:00 PM',
-          totalHoursWorked: 8.87,
-          status: 'LATE',
-          notes: 'Transit delay on metro rail',
-        },
-      ]);
+      setAttendanceList(activeTab === 'my' ? DEMO_MY_ATTENDANCE : DEMO_TEAM_ATTENDANCE);
       setTodayRecord({
-        clockInTime: '09:02:14 AM',
+        clockInTime: '08:58:14 AM',
         status: 'PRESENT',
       });
     } finally {

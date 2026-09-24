@@ -92,6 +92,38 @@ export default function PerformancePage() {
             progress: 100,
             status: 'COMPLETED',
           },
+          {
+            id: '4',
+            title: 'Automate Zero-Downtime Multi-Region Cloud Run Deployments',
+            category: 'Cloud & Infrastructure',
+            targetDate: '2026-10-15',
+            progress: 90,
+            status: 'IN_PROGRESS',
+          },
+          {
+            id: '5',
+            title: 'Implement SOC2 Type II Continuous Compliance Monitoring',
+            category: 'Security & Governance',
+            targetDate: '2026-12-01',
+            progress: 45,
+            status: 'IN_PROGRESS',
+          },
+          {
+            id: '6',
+            title: 'Refactor Employee Hierarchy Tree and Org Chart Visualizer',
+            category: 'Engineering & Platform',
+            targetDate: '2026-10-20',
+            progress: 75,
+            status: 'IN_PROGRESS',
+          },
+          {
+            id: '7',
+            title: 'Establish Candidate Hiring Pipeline for Tech Lead Roles',
+            category: 'Talent & Culture',
+            targetDate: '2026-09-15',
+            progress: 100,
+            status: 'COMPLETED',
+          },
         ]);
       }
 
@@ -102,12 +134,42 @@ export default function PerformancePage() {
           {
             id: '1',
             cycle: { title: 'H2 2026 Company Performance Appraisal Cycle' },
+            selfRating: 4.9,
+            managerRating: 5.0,
+            finalScore: 4.95,
+            status: 'COMPLETED',
+            managerFeedback:
+              'Consistently exceptional execution speed, architectural stewardship, and production reliability. Core pillar of engineering excellence.',
+          },
+          {
+            id: '2',
+            cycle: { title: 'H2 2026 Company Performance Appraisal Cycle' },
+            selfRating: 4.7,
+            managerRating: 4.8,
+            finalScore: 4.75,
+            status: 'COMPLETED',
+            managerFeedback:
+              'Outstanding cloud infrastructure leadership, Knative autoscaling config, and reliable production operations.',
+          },
+          {
+            id: '3',
+            cycle: { title: 'H1 2026 Bi-Annual Engineering Review' },
+            selfRating: 4.6,
+            managerRating: 4.7,
+            finalScore: 4.65,
+            status: 'COMPLETED',
+            managerFeedback:
+              'Delivered voice input/output AI features ahead of schedule and achieved significant web responsiveness enhancements.',
+          },
+          {
+            id: '4',
+            cycle: { title: 'H1 2026 Bi-Annual Engineering Review' },
             selfRating: 4.8,
             managerRating: 4.9,
             finalScore: 4.85,
             status: 'COMPLETED',
             managerFeedback:
-              'Exceptional architectural stewardship and velocity. Code quality, security guardrails, and responsive design execution meet the highest tier of enterprise standards.',
+              'Crafted high-fidelity editorial brand identity and refined user experience across complex workforce workflows.',
           },
         ]);
       }
@@ -121,16 +183,41 @@ export default function PerformancePage() {
           progress: 85,
           status: 'IN_PROGRESS',
         },
+        {
+          id: '2',
+          title: 'Achieve 95%+ E2E Test Coverage on Core Payroll Logic',
+          category: 'Quality & Reliability',
+          targetDate: '2026-11-15',
+          progress: 60,
+          status: 'IN_PROGRESS',
+        },
+        {
+          id: '3',
+          title: 'Implement Editorial Design System Tokens across Next.js Web Portal',
+          category: 'UI/UX Excellence',
+          targetDate: '2026-09-30',
+          progress: 100,
+          status: 'COMPLETED',
+        },
       ]);
       setReviews([
         {
           id: '1',
-          cycle: { title: 'H2 2026 Performance Cycle' },
-          selfRating: 4.8,
-          managerRating: 4.9,
-          finalScore: 4.85,
+          cycle: { title: 'H2 2026 Company Performance Appraisal Cycle' },
+          selfRating: 4.9,
+          managerRating: 5.0,
+          finalScore: 4.95,
           status: 'COMPLETED',
-          managerFeedback: 'Exceptional architectural delivery.',
+          managerFeedback: 'Consistently exceptional execution speed and architectural stewardship.',
+        },
+        {
+          id: '2',
+          cycle: { title: 'H1 2026 Bi-Annual Review' },
+          selfRating: 4.6,
+          managerRating: 4.7,
+          finalScore: 4.65,
+          status: 'COMPLETED',
+          managerFeedback: 'Delivered voice input/output AI features ahead of schedule.',
         },
       ]);
     } finally {

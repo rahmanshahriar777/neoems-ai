@@ -72,6 +72,69 @@ export default function PayrollPage() {
   const [runYear, setRunYear] = useState<number>(new Date().getFullYear());
   const [runningPayroll, setRunningPayroll] = useState(false);
 
+  const FALLBACK_PAYROLL_RUNS: PayrollRun[] = [
+    {
+      id: '1',
+      month: 8,
+      year: 2026,
+      totalGross: 98000.0,
+      totalDeductions: 14700.0,
+      totalNet: 83300.0,
+      status: 'APPROVED',
+      department: { name: 'Engineering & Technology' },
+    },
+    {
+      id: '2',
+      month: 8,
+      year: 2026,
+      totalGross: 36000.0,
+      totalDeductions: 5400.0,
+      totalNet: 30600.0,
+      status: 'APPROVED',
+      department: { name: 'Human Resources & People' },
+    },
+    {
+      id: '3',
+      month: 8,
+      year: 2026,
+      totalGross: 48000.0,
+      totalDeductions: 7200.0,
+      totalNet: 40800.0,
+      status: 'APPROVED',
+      department: { name: 'Finance, Product & Design' },
+    },
+    {
+      id: '4',
+      month: 7,
+      year: 2026,
+      totalGross: 96500.0,
+      totalDeductions: 14475.0,
+      totalNet: 82025.0,
+      status: 'PAID',
+      department: { name: 'Engineering & Technology' },
+    },
+    {
+      id: '5',
+      month: 7,
+      year: 2026,
+      totalGross: 82000.0,
+      totalDeductions: 12300.0,
+      totalNet: 69700.0,
+      status: 'PAID',
+      department: { name: 'Operations & Administration' },
+    },
+    {
+      id: '6',
+      month: 6,
+      year: 2026,
+      totalGross: 175000.0,
+      totalDeductions: 26250.0,
+      totalNet: 148750.0,
+      status: 'PAID',
+      department: { name: 'Company-Wide Consolidated' },
+    },
+  ];
+
   const fetchPayroll = async () => {
     setLoading(true);
     try {
@@ -83,18 +146,7 @@ export default function PayrollPage() {
       if (runs && Array.isArray(runs) && runs.length > 0) {
         setPayrollRuns(runs);
       } else {
-        setPayrollRuns([
-          {
-            id: '1',
-            month: 8,
-            year: 2026,
-            totalGross: 38000.0,
-            totalDeductions: 5700.0,
-            totalNet: 32300.0,
-            status: 'APPROVED',
-            department: { name: 'Engineering & Operations' },
-          },
-        ]);
+        setPayrollRuns(FALLBACK_PAYROLL_RUNS);
       }
 
       if (slips && Array.isArray(slips) && slips.length > 0) {
@@ -193,9 +245,79 @@ export default function PayrollPage() {
               { component: 'Income Tax & Statutory Withholding', type: 'DEDUCTION', amount: 1425.0 },
             ],
           },
+          {
+            id: '5',
+            periodMonth: 8,
+            periodYear: 2026,
+            grossPay: 10000.0,
+            totalDeductions: 1500.0,
+            netPay: 8500.0,
+            status: 'PAID',
+            employee: {
+              firstName: 'Alex',
+              lastName: 'Rivera',
+              employeeNumber: 'EMP-2026-0005',
+              designation: { title: 'Lead Cloud Architect' },
+              department: { name: 'Engineering' },
+            },
+            breakdown: [
+              { component: 'Base Salary (Monthly)', type: 'EARNING', amount: 5000.0 },
+              { component: 'House Rent Allowance (HRA)', type: 'EARNING', amount: 2000.0 },
+              { component: 'Cloud Architecture Allowance', type: 'EARNING', amount: 2400.0 },
+              { component: 'Transit Allowance', type: 'EARNING', amount: 600.0 },
+              { component: 'Income Tax Withholding', type: 'DEDUCTION', amount: 1500.0 },
+            ],
+          },
+          {
+            id: '6',
+            periodMonth: 8,
+            periodYear: 2026,
+            grossPay: 8200.0,
+            totalDeductions: 1230.0,
+            netPay: 6970.0,
+            status: 'PAID',
+            employee: {
+              firstName: 'Elena',
+              lastName: 'Rostova',
+              employeeNumber: 'EMP-2026-0006',
+              designation: { title: 'Software Engineer II' },
+              department: { name: 'Engineering' },
+            },
+            breakdown: [
+              { component: 'Base Salary (Monthly)', type: 'EARNING', amount: 4100.0 },
+              { component: 'House Rent Allowance (HRA)', type: 'EARNING', amount: 1640.0 },
+              { component: 'Engineering Specialist Allowance', type: 'EARNING', amount: 1960.0 },
+              { component: 'Transit & Health', type: 'EARNING', amount: 500.0 },
+              { component: 'Income Tax Withholding', type: 'DEDUCTION', amount: 1230.0 },
+            ],
+          },
+          {
+            id: '7',
+            periodMonth: 8,
+            periodYear: 2026,
+            grossPay: 9800.0,
+            totalDeductions: 1470.0,
+            netPay: 8330.0,
+            status: 'PAID',
+            employee: {
+              firstName: 'Chloe',
+              lastName: 'Martin',
+              employeeNumber: 'EMP-2026-0013',
+              designation: { title: 'Head of Product' },
+              department: { name: 'Product & Design' },
+            },
+            breakdown: [
+              { component: 'Base Salary (Monthly)', type: 'EARNING', amount: 4900.0 },
+              { component: 'House Rent Allowance (HRA)', type: 'EARNING', amount: 1960.0 },
+              { component: 'Product Leadership Allowance', type: 'EARNING', amount: 2440.0 },
+              { component: 'Medical Allowance', type: 'EARNING', amount: 500.0 },
+              { component: 'Income Tax Withholding', type: 'DEDUCTION', amount: 1470.0 },
+            ],
+          },
         ]);
       }
     } catch {
+      setPayrollRuns(FALLBACK_PAYROLL_RUNS);
       setPayslips([
         {
           id: '1',
@@ -205,7 +327,7 @@ export default function PayrollPage() {
           totalDeductions: 1425.0,
           netPay: 8075.0,
           status: 'PAID',
-          employee: { firstName: 'Sadia', lastName: 'Rahman', employeeNumber: 'EMP-2026-0004' },
+          employee: { firstName: 'Sadia', lastName: 'Rahman', employeeNumber: 'EMP-2026-0004', designation: { title: 'Senior Software Engineer' }, department: { name: 'Engineering' } },
           breakdown: [
             { component: 'Base Salary', type: 'EARNING', amount: 4750.0 },
             { component: 'House Rent Allowance (HRA)', type: 'EARNING', amount: 1900.0 },
