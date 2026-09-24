@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { DashboardLayout } from '../../../components/layout/dashboard-layout';
 import { useAiCompletion } from '../../../hooks/use-ai-completion';
+import { useSpeech } from '../../../hooks/use-speech';
 import '../../../styles/ai-assistant.css';
 
 interface SuggestionItem {
@@ -99,19 +100,77 @@ export default function AIAssistantPage() {
   const [prompt, setPrompt] = useState<string>('');
   const [copied, setCopied] = useState<boolean>(false);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(true);
+  const [dismissedVoiceAlert, setDismissedVoiceAlert] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const wasVoiceSubmittedRef = useRef<boolean>(false);
 
   const { generate, data, loading, error } = useAiCompletion();
 
+  // Speech integration (Voice Input STT + Voice Output TTS)
+  const handleFinalVoiceTranscript = useCallback((finalText: string) => {
+    if (!finalText.trim()) return;
+    setPrompt(finalText);
+    wasVoiceSubmittedRef.current = true;
+    handleGenerateWithText(finalText, true);
+  }, []);
+
+  const {
+    isListening,
+    transcript,
+    interimTranscript,
+    recognitionError,
+    sttSupported,
+    startListening,
+    stopListening,
+    cancelListening,
+    isSpeaking,
+    ttsSupported,
+    speak,
+    stopSpeaking,
+    autoSpeak,
+    setAutoSpeak,
+  } = useSpeech({
+    onTranscriptChange: (liveText) => {
+      if (liveText) {
+        setPrompt(liveText);
+        if (textareaRef.current) {
+          textareaRef.current.value = liveText;
+        }
+      }
+    },
+    onFinalTranscript: handleFinalVoiceTranscript,
+  });
+
+  const handleGenerateWithText = async (textToSend: string, fromVoice = false) => {
+    const trimmed = textToSend.trim();
+    if (!trimmed || loading) return;
+
+    if (fromVoice) {
+      wasVoiceSubmittedRef.current = true;
+    }
+    stopSpeaking();
+    setShowSuggestions(false);
+
+    try {
+      const result = await generate({
+        prompt: trimmed,
+        model: selectedModel,
+      });
+
+      // Automatically speak the AI response if voice input was used or auto-speak is enabled
+      if (result?.content && (wasVoiceSubmittedRef.current || autoSpeak)) {
+        speak(result.content);
+      }
+    } catch {
+      // Error handled by hook
+    } finally {
+      wasVoiceSubmittedRef.current = false;
+    }
+  };
+
   const handleGenerate = async (customPrompt?: string) => {
     const textToSend = (customPrompt !== undefined ? customPrompt : prompt).trim();
-    if (!textToSend || loading) return;
-
-    setShowSuggestions(false);
-    await generate({
-      prompt: textToSend,
-      model: selectedModel,
-    });
+    await handleGenerateWithText(textToSend, false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -138,6 +197,15 @@ export default function AIAssistantPage() {
     });
   };
 
+  const handleToggleListening = () => {
+    setDismissedVoiceAlert(false);
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
+
   const isGroq = data?.provider === 'groq' || data?.model?.includes('llama') || selectedModel.includes('llama');
   const providerTagClass = isGroq ? 'ai-response-provider-tag groq' : 'ai-response-provider-tag gemini';
   const providerModelLabel = data?.model || (selectedModel === 'gemini-1.5-flash' ? 'gemini-1.5-flash' : 'llama-3.3-70b-versatile');
@@ -151,7 +219,7 @@ export default function AIAssistantPage() {
           <div className="ai-page-header">
             <h1 className="ai-page-title">AI Assistant</h1>
             <p className="ai-page-subtitle">
-              Draft documents, generate summaries, and get answers using your EMS data context.
+              Draft documents, generate summaries, and talk directly to your EMS data with voice input and audio response.
             </p>
           </div>
 
@@ -192,9 +260,56 @@ export default function AIAssistantPage() {
             </div>
           </div>
 
+          {/* Voice Alert if microphone permission denied or unsupported */}
+          {recognitionError && !dismissedVoiceAlert && (
+            <div className="ai-voice-alert" id="voiceAlert">
+              <div className="ai-voice-alert-content">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>{recognitionError}</span>
+              </div>
+              <button
+                type="button"
+                className="ai-voice-alert-close"
+                onClick={() => setDismissedVoiceAlert(true)}
+                title="Dismiss"
+              >
+                &times;
+              </button>
+            </div>
+          )}
+
           {/* Prompt Section */}
           <div className="ai-prompt-section">
             <div className="ai-prompt-container">
+
+              {/* Listening Active Banner */}
+              {isListening && (
+                <div className="ai-voice-status-banner" id="voiceStatusBanner">
+                  <div className="ai-voice-status-left">
+                    <div className="ai-voice-waveform">
+                      <span className="ai-waveform-bar" />
+                      <span className="ai-waveform-bar" />
+                      <span className="ai-waveform-bar" />
+                      <span className="ai-waveform-bar" />
+                      <span className="ai-waveform-bar" />
+                    </div>
+                    <span>Listening... speak now. Click microphone or pause to submit.</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="ai-voice-cancel-btn"
+                    onClick={cancelListening}
+                    title="Cancel voice input without submitting"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+
               <textarea
                 ref={textareaRef}
                 className="ai-prompt-textarea"
@@ -202,7 +317,11 @@ export default function AIAssistantPage() {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Describe what you need — draft a policy, summarize documents, generate a report outline, or ask a question about employee data..."
+                placeholder={
+                  isListening
+                    ? 'Listening to speech... your words will appear here and submit automatically.'
+                    : 'Describe what you need or click the microphone to speak...'
+                }
                 spellCheck={true}
                 disabled={loading}
               />
@@ -214,18 +333,57 @@ export default function AIAssistantPage() {
                   <span className="ai-prompt-kbd">Shift + Enter</span>
                   <span className="ai-prompt-char-hint">for new line</span>
                 </div>
-                <button
-                  className="ai-prompt-submit"
-                  id="submitBtn"
-                  onClick={() => handleGenerate()}
-                  disabled={!prompt.trim() || loading}
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13" />
-                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                  </svg>
-                  <span>Generate</span>
-                </button>
+
+                <div className="ai-prompt-footer-right">
+                  {/* Auto-speak toggle */}
+                  {ttsSupported && (
+                    <label className="ai-voice-toggle-wrap" title="Automatically read out AI responses with voice output">
+                      <input
+                        type="checkbox"
+                        id="autoSpeakToggle"
+                        checked={autoSpeak}
+                        onChange={(e) => setAutoSpeak(e.target.checked)}
+                      />
+                      <span>Voice Output</span>
+                    </label>
+                  )}
+
+                  {/* Microphone Button (Speech-to-Text) */}
+                  <button
+                    type="button"
+                    className={`ai-mic-btn ${isListening ? 'listening' : ''}`}
+                    id="micBtn"
+                    onClick={handleToggleListening}
+                    disabled={loading}
+                    title={
+                      isListening
+                        ? 'Listening... Click to stop and submit'
+                        : 'Voice Input: Click to speak using Speech-to-Text'
+                    }
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={isListening ? 'ai-mic-icon-pulse' : ''}>
+                      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                      <line x1="12" y1="19" x2="12" y2="22" />
+                      <line x1="8" y1="22" x2="16" y2="22" />
+                    </svg>
+                    <span>{isListening ? 'Listening...' : 'Voice'}</span>
+                  </button>
+
+                  {/* Submit Button */}
+                  <button
+                    className="ai-prompt-submit"
+                    id="submitBtn"
+                    onClick={() => handleGenerate()}
+                    disabled={!prompt.trim() || loading}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="22" y1="2" x2="11" y2="13" />
+                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                    <span>Generate</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -242,6 +400,16 @@ export default function AIAssistantPage() {
                     {data?.latencyMs !== undefined && (
                       <span className="ai-response-latency" id="responseLatency">
                         {data.latencyMs}ms
+                      </span>
+                    )}
+                    {isSpeaking && (
+                      <span className="ai-response-latency" style={{ color: '#2c5f4a', fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <span>Speaking</span>
+                        <span className="ai-sound-waves">
+                          <span className="ai-sound-wave-bar" />
+                          <span className="ai-sound-wave-bar" />
+                          <span className="ai-sound-wave-bar" />
+                        </span>
                       </span>
                     )}
                   </div>
@@ -273,6 +441,45 @@ export default function AIAssistantPage() {
                       {data.content}
                     </div>
                     <div className="ai-response-actions">
+                      {/* Voice Output Read Aloud / Stop Button */}
+                      {ttsSupported && (
+                        <button
+                          className={`ai-response-action-btn ${isSpeaking ? 'active-speech' : ''}`}
+                          id="speakBtn"
+                          onClick={() => {
+                            if (isSpeaking) {
+                              stopSpeaking();
+                            } else if (data?.content) {
+                              speak(data.content);
+                            }
+                          }}
+                          title={isSpeaking ? 'Stop speaking audio' : 'Listen to response with Text-to-Speech'}
+                        >
+                          {isSpeaking ? (
+                            <>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="6" y="6" width="12" height="12" rx="2" />
+                              </svg>
+                              <span>Stop</span>
+                              <span className="ai-sound-waves">
+                                <span className="ai-sound-wave-bar" />
+                                <span className="ai-sound-wave-bar" />
+                                <span className="ai-sound-wave-bar" />
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                              </svg>
+                              <span>Listen</span>
+                            </>
+                          )}
+                        </button>
+                      )}
+
+                      {/* Copy Action */}
                       <button className="ai-response-action-btn" id="copyBtn" onClick={handleCopy}>
                         {copied ? (
                           <>
@@ -291,6 +498,8 @@ export default function AIAssistantPage() {
                           </>
                         )}
                       </button>
+
+                      {/* Regenerate Action */}
                       <button className="ai-response-action-btn" id="regenerateBtn" onClick={() => handleGenerate()}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="23 4 23 10 17 10" />

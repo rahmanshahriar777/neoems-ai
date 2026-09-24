@@ -520,6 +520,182 @@
       line-height: 1.6;
     }
 
+    .prompt-footer-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mic-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+      user-select: none;
+    }
+
+    .mic-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .mic-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .mic-btn svg {
+      width: 15px;
+      height: 15px;
+      transition: transform var(--transition-fast);
+    }
+
+    .mic-btn.listening {
+      background: #fef2f2;
+      border-color: #ef4444;
+      color: #b91c1c;
+      animation: micPulse 1.8s infinite;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+
+    .mic-btn.listening .mic-icon-pulse {
+      color: #dc2626;
+      animation: micIconBounce 1s infinite alternate ease-in-out;
+    }
+
+    .mic-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .voice-status-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: #fef2f2;
+      border-bottom: 1px solid #fee2e2;
+      color: #991b1b;
+      font-size: 13px;
+      font-weight: 500;
+      animation: fadeUp 0.3s ease;
+    }
+
+    .voice-status-banner.visible {
+      display: flex;
+    }
+
+    .voice-status-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .voice-waveform {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 16px;
+    }
+
+    .waveform-bar {
+      width: 3px;
+      height: 6px;
+      background-color: #ef4444;
+      border-radius: 2px;
+      animation: waveBar 1s ease-in-out infinite alternate;
+    }
+
+    .waveform-bar:nth-child(2) { animation-delay: 0.15s; height: 12px; }
+    .waveform-bar:nth-child(3) { animation-delay: 0.3s; height: 16px; }
+    .waveform-bar:nth-child(4) { animation-delay: 0.45s; height: 10px; }
+    .waveform-bar:nth-child(5) { animation-delay: 0.6s; height: 8px; }
+
+    .voice-cancel-btn {
+      background: transparent;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .voice-cancel-btn:hover {
+      background: #fee2e2;
+    }
+
+    .voice-toggle-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .voice-toggle-wrap input[type="checkbox"] {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .response-action-btn.active-speech {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .sound-waves {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 12px;
+      margin-left: 3px;
+    }
+
+    .sound-wave-bar {
+      width: 2px;
+      height: 4px;
+      background: currentColor;
+      border-radius: 1px;
+      animation: waveBar 0.8s ease-in-out infinite alternate;
+    }
+
+    .sound-wave-bar:nth-child(2) { animation-delay: 0.2s; height: 10px; }
+    .sound-wave-bar:nth-child(3) { animation-delay: 0.4s; height: 6px; }
+
+    @keyframes micPulse {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    @keyframes micIconBounce {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.15); }
+    }
+
+    @keyframes waveBar {
+      0% { height: 4px; }
+      100% { height: 14px; }
+    }
+
     .prompt-submit {
       display: flex;
       align-items: center;
@@ -995,10 +1171,25 @@
         <!-- Prompt Input -->
         <div class="prompt-section">
           <div class="prompt-container">
+            <!-- Listening Banner -->
+            <div class="voice-status-banner" id="voiceStatusBanner">
+              <div class="voice-status-left">
+                <div class="voice-waveform">
+                  <span class="waveform-bar"></span>
+                  <span class="waveform-bar"></span>
+                  <span class="waveform-bar"></span>
+                  <span class="waveform-bar"></span>
+                  <span class="waveform-bar"></span>
+                </div>
+                <span>Listening... speak now. Click microphone or pause to submit.</span>
+              </div>
+              <button type="button" class="voice-cancel-btn" id="voiceCancelBtn" title="Cancel voice input">Cancel</button>
+            </div>
+
             <textarea
               class="prompt-textarea"
               id="promptInput"
-              placeholder="Describe what you need — draft a policy, summarize documents, generate a report outline, or ask a question about employee data..."
+              placeholder="Describe what you need or click the microphone to speak..."
               spellcheck="true"
             ></textarea>
             <div class="prompt-footer">
@@ -1007,10 +1198,25 @@
                 <span class="prompt-kbd">Shift + Enter</span>
                 <span class="prompt-char-hint">for new line</span>
               </div>
-              <button class="prompt-submit" id="submitBtn" disabled>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                Generate
-              </button>
+              <div class="prompt-footer-right">
+                <label class="voice-toggle-wrap" title="Automatically read out AI responses with voice output">
+                  <input type="checkbox" id="autoSpeakToggle" checked>
+                  <span>Voice Output</span>
+                </label>
+                <button type="button" class="mic-btn" id="micBtn" title="Voice Input: Click to speak using Speech-to-Text">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                    <line x1="12" y1="19" x2="12" y2="22"/>
+                    <line x1="8" y1="22" x2="16" y2="22"/>
+                  </svg>
+                  <span id="micBtnLabel">Voice</span>
+                </button>
+                <button class="prompt-submit" id="submitBtn" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  Generate
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1022,6 +1228,14 @@
               <div class="response-header-left">
                 <span class="response-provider-tag gemini" id="responseProvider">gemini-1.5-flash</span>
                 <span class="response-latency" id="responseLatency">324ms</span>
+                <span id="speakingBadge" class="response-latency" style="display: none; color: #2c5f4a; font-weight: 500; align-items: center; gap: 4px;">
+                  Speaking
+                  <span class="sound-waves">
+                    <span class="sound-wave-bar"></span>
+                    <span class="sound-wave-bar"></span>
+                    <span class="sound-wave-bar"></span>
+                  </span>
+                </span>
               </div>
             </div>
             <div class="loading-indicator" id="loadingIndicator">
@@ -1034,6 +1248,10 @@
             </div>
             <div class="response-body" id="responseBody"></div>
             <div class="response-actions">
+              <button class="response-action-btn" id="speakBtn" title="Listen to response with Text-to-Speech">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <span id="speakBtnText">Listen</span>
+              </button>
               <button class="response-action-btn" id="copyBtn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 Copy
@@ -1118,7 +1336,7 @@
     </main>
   </div>
 
-  <!-- ─── INTERACTION LOGIC (Direct API Integration) ───────────────────── -->
+  <!-- ─── INTERACTION LOGIC (Direct API + Voice STT/TTS Integration) ────── -->
   <script>
     const promptInput = document.getElementById('promptInput');
     const submitBtn = document.getElementById('submitBtn');
@@ -1132,6 +1350,235 @@
     const copyBtn = document.getElementById('copyBtn');
     const regenerateBtn = document.getElementById('regenerateBtn');
     const suggestionChips = document.querySelectorAll('.suggestion-chip');
+
+    // Voice Elements
+    const micBtn = document.getElementById('micBtn');
+    const micBtnLabel = document.getElementById('micBtnLabel');
+    const voiceStatusBanner = document.getElementById('voiceStatusBanner');
+    const voiceCancelBtn = document.getElementById('voiceCancelBtn');
+    const autoSpeakToggle = document.getElementById('autoSpeakToggle');
+    const speakBtn = document.getElementById('speakBtn');
+    const speakBtnText = document.getElementById('speakBtnText');
+    const speakingBadge = document.getElementById('speakingBadge');
+
+    let isListening = false;
+    let isSpeaking = false;
+    let wasVoiceSubmitted = false;
+    let recognition = null;
+    let latestTranscript = '';
+    let isManuallyStopped = false;
+    let silenceTimer = null;
+
+    // Check Speech Recognition support
+    const SpeechRecognitionConstructor =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition ||
+      window.mozSpeechRecognition ||
+      window.msSpeechRecognition;
+
+    if (SpeechRecognitionConstructor) {
+      recognition = new SpeechRecognitionConstructor();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        isListening = true;
+        micBtn.classList.add('listening');
+        micBtnLabel.textContent = 'Listening...';
+        voiceStatusBanner.classList.add('visible');
+      };
+
+      recognition.onresult = (event) => {
+        let accumulatedFinal = '';
+        let currentInterim = '';
+
+        for (let i = 0; i < event.results.length; ++i) {
+          const res = event.results[i];
+          if (res.isFinal) {
+            accumulatedFinal += res[0].transcript;
+          } else {
+            currentInterim += res[0].transcript;
+          }
+        }
+
+        const combinedText = (accumulatedFinal + (currentInterim ? ' ' + currentInterim : '')).trim();
+
+        if (combinedText) {
+          latestTranscript = combinedText;
+          promptInput.value = combinedText;
+          promptInput.dispatchEvent(new Event('input'));
+
+          // Silence timeout: auto-submit if user pauses speaking for 1.8 seconds
+          if (silenceTimer) clearTimeout(silenceTimer);
+          silenceTimer = setTimeout(() => {
+            const textToSubmit = latestTranscript.trim();
+            if (textToSubmit && isListening) {
+              isManuallyStopped = false;
+              wasVoiceSubmitted = true;
+              try { recognition.stop(); } catch (e) {}
+              stopListeningUi();
+              handleSubmit(textToSubmit, true);
+            }
+          }, 1800);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        if (event.error === 'no-speech') {
+          return;
+        }
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          alert('Microphone access denied. Please allow microphone permissions in your browser.');
+        } else if (event.error !== 'aborted') {
+          console.warn('Speech recognition error:', event.error);
+        }
+        stopListeningUi();
+      };
+
+      recognition.onend = () => {
+        stopListeningUi();
+        const finalText = latestTranscript.trim();
+        if (finalText && !isManuallyStopped && !wasVoiceSubmitted) {
+          wasVoiceSubmitted = true;
+          handleSubmit(finalText, true);
+        }
+      };
+    } else {
+      micBtn.title = 'Speech recognition not supported in this browser (Use Chrome or Edge)';
+    }
+
+    function stopListeningUi() {
+      isListening = false;
+      micBtn.classList.remove('listening');
+      micBtnLabel.textContent = 'Voice';
+      voiceStatusBanner.classList.remove('visible');
+      if (silenceTimer) {
+        clearTimeout(silenceTimer);
+        silenceTimer = null;
+      }
+    }
+
+    // Toggle Microphone
+    micBtn.addEventListener('click', async () => {
+      stopSpeech();
+      if (!SpeechRecognitionConstructor) {
+        alert('Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.');
+        return;
+      }
+
+      if (isListening) {
+        isManuallyStopped = true;
+        try { recognition.stop(); } catch (e) {}
+        stopListeningUi();
+        const textToSubmit = latestTranscript.trim();
+        if (textToSubmit) {
+          wasVoiceSubmitted = true;
+          handleSubmit(textToSubmit, true);
+        }
+      } else {
+        // Prompt for microphone permissions if needed
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(t => t.stop());
+          } catch (e) {
+            alert('Microphone permission was denied. Please allow microphone access in your browser settings.');
+            return;
+          }
+        }
+
+        isManuallyStopped = false;
+        latestTranscript = '';
+        try {
+          recognition.start();
+        } catch (e) {
+          console.warn('Recognition start error:', e);
+        }
+      }
+    });
+
+    voiceCancelBtn.addEventListener('click', () => {
+      isManuallyStopped = true;
+      if (silenceTimer) clearTimeout(silenceTimer);
+      if (recognition) {
+        try { recognition.abort(); } catch (e) {}
+      }
+      stopListeningUi();
+    });
+
+    // ─── Text-to-Speech (Voice Output) ──────────────────────────────────
+    function cleanMarkdownForSpeech(text) {
+      if (!text) return '';
+      return text
+        .replace(/```[\s\S]*?```/g, 'Code snippet omitted.')
+        .replace(/`([^`]+)`/g, '$1')
+        .replace(/^#{1,6}\s+/gm, '')
+        .replace(/[*_]{1,3}([^*_]+)[*_]{1,3}/g, '$1')
+        .replace(/https?:\/\/\S+/g, 'link')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/^\s*>\s+/gm, '')
+        .replace(/^[-*_]{3,}\s*$/gm, '')
+        .replace(/^[\s*-+]\s+/gm, ', ')
+        .replace(/\n+/g, '. ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+    }
+
+    function stopSpeech() {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      isSpeaking = false;
+      speakBtn.classList.remove('active-speech');
+      speakBtnText.textContent = 'Listen';
+      speakingBadge.style.display = 'none';
+    }
+
+    function speakText(rawText) {
+      if (!('speechSynthesis' in window)) return;
+      stopSpeech();
+
+      const cleaned = cleanMarkdownForSpeech(rawText);
+      if (!cleaned) return;
+
+      const sentenceRegex = /[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g;
+      const chunks = cleaned.match(sentenceRegex) || [cleaned];
+
+      const voices = window.speechSynthesis.getVoices();
+      const naturalVoice =
+        voices.find(v => (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Jenny') || v.name.includes('Samantha')) && v.lang.startsWith('en')) ||
+        voices.find(v => v.lang.startsWith('en')) ||
+        voices[0];
+
+      isSpeaking = true;
+      speakBtn.classList.add('active-speech');
+      speakBtnText.textContent = 'Stop';
+      speakingBadge.style.display = 'inline-flex';
+
+      chunks.forEach((chunk, index) => {
+        const u = new SpeechSynthesisUtterance(chunk.trim());
+        if (naturalVoice) u.voice = naturalVoice;
+        u.rate = 1.0;
+        u.pitch = 1.0;
+
+        if (index === chunks.length - 1) {
+          u.onend = stopSpeech;
+        }
+        u.onerror = stopSpeech;
+
+        window.speechSynthesis.speak(u);
+      });
+    }
+
+    speakBtn.addEventListener('click', () => {
+      if (isSpeaking) {
+        stopSpeech();
+      } else {
+        const text = responseBody.innerText || responseBody.textContent;
+        if (text) speakText(text);
+      }
+    });
 
     // Character count + button state
     promptInput.addEventListener('input', () => {
@@ -1150,7 +1597,7 @@
       }
     });
 
-    submitBtn.addEventListener('click', handleSubmit);
+    submitBtn.addEventListener('click', () => handleSubmit());
 
     // Suggestion chips
     suggestionChips.forEach(chip => {
@@ -1178,9 +1625,11 @@
       }
     });
 
-    async function handleSubmit() {
-      const prompt = promptInput.value.trim();
+    async function handleSubmit(customPrompt, fromVoice = false) {
+      const prompt = (customPrompt !== undefined ? customPrompt : promptInput.value).trim();
       if (!prompt) return;
+
+      stopSpeech();
 
       // Show loading
       responseSection.classList.add('visible');
@@ -1209,6 +1658,10 @@
           responseProvider.className = `response-provider-tag ${isGroq ? 'groq' : 'gemini'}`;
           responseLatency.textContent = `${result.latencyMs || elapsed}ms`;
           responseBody.textContent = result.content;
+
+          if (fromVoice || autoSpeakToggle.checked) {
+            speakText(result.content);
+          }
         } else {
           throw new Error('Server returned ' + res.status);
         }
@@ -1220,14 +1673,20 @@
         responseProvider.textContent = 'gemini-1.5-flash';
         responseProvider.className = 'response-provider-tag gemini';
         responseLatency.textContent = `${elapsed > 50 ? elapsed : 324}ms`;
+        const fallbackText = `This is a demonstration response from gemini-1.5-flash. The prompt "${prompt.replace(/</g, "&lt;")}" has been processed through the high-availability AI pipeline. Automatic failover to Groq (llama-3.3-70b-versatile) is actively primed if the primary provider experiences rate limits or high latency.`;
         responseBody.innerHTML = `
           <p>This is a demonstration response from <strong>gemini-1.5-flash</strong>.</p>
           <p>The prompt "<em>${prompt.replace(/</g, "&lt;")}</em>" has been processed through the high-availability AI pipeline.</p>
           <p>Automatic failover to Groq (llama-3.3-70b-versatile) is actively primed if the primary provider experiences rate limits or high latency.</p>
         `;
+
+        if (fromVoice || autoSpeakToggle.checked) {
+          speakText(fallbackText);
+        }
       } finally {
         submitBtn.disabled = false;
         suggestionsSection.style.display = 'none';
+        wasVoiceSubmitted = false;
       }
     }
   </script>
